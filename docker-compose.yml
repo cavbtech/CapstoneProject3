@@ -1,0 +1,136 @@
+#before running the docker-compose up use docker-compose rm -svf
+version: '3'
+services:
+
+  spark-master:
+    ##image: bde2020/spark-master:2.4.0-hadoop2.7
+    image: bde2020/spark-master:3.1.1-hadoop3.2
+    container_name: spark-master
+    ports:
+      - 8080:8080
+      - 7077:7077
+    environment:
+      - INIT_DAEMON_STEP=setup_spark
+#      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+#    env_file:
+#      - ./hadoop-hive.env
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.10
+     
+  spark-worker:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2
+    container_name: spark-worker
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+#      - HIVE_CORE_CONF_javax_jdo_option_ConnectionURL=jdbc:postgresql://hive-metastore/metastore
+    ports:
+      - 8081:8081
+#    env_file:
+#      - ./hadoop-hive.env
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.11
+
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.15
+
+  kafka:
+    image: wurstmeister/kafka:2.12-2.3.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 172.27.1.16
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.16  
+#
+  producer:
+    deploy:
+      replicas: 1
+    build: producer
+    container_name: producer_container
+    depends_on:
+      - zookeeper
+      - kafka
+    volumes:
+      - ./datavol:/app/datavol
+    ports:
+      - "50030:50030"
+    environment:
+      KAFKA_BROKER: kafka:9092
+      TOPIC: newsfeeds
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.17
+  consumer:
+    deploy:
+      replicas: 1
+    build: consumer
+    container_name: consumer_container
+    hostname: driver
+    depends_on:
+      - zookeeper
+      - kafka
+    volumes:
+      - ./datavol:/app/datavol
+    ports:
+      - "8088:8088"
+      - "8042:8042"
+      - "4041:4041"
+    environment:
+      KAFKA_BROKER: kafka:9092
+      TOPIC: newsfeeds
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.18
+
+  datamodel:
+    deploy:
+      replicas: 1
+    build: datamodel
+    container_name: datamodel_container
+    hostname: driver
+    depends_on:
+      - consumer
+    volumes:
+      - ./datavol:/app/datavol
+    ports:
+      - "8089:8088"
+      - "8043:8042"
+      - "4042:4041"
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.19
+
+  webapp:
+    deploy:
+      replicas: 1
+    build: webapp
+    container_name: webapp_container
+    volumes:
+      - ./datavol:/app/datavol
+    ports:
+      - "11030:11030"
+    networks:
+      net_pet:
+        ipv4_address: 172.27.1.20
+networks:
+  net_pet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.27.0.0/16

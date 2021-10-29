@@ -1,0 +1,17 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+venv
+consumer/devjars/checkpoint
+datavol/raw/newfeeds/checkpoint
+datavol/raw/newfeeds/cleansed
+datavol/cleansed
+consumer/devjars/newfeeds
+datavol/raw/newsfeeds
+

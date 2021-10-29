@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Categorization Application</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"
+        media="screen" />
+
+    <style>
+        input[type=text] {
+            width: 100%;
+            padding: 6px 10px;
+            margin: 4px 0;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f1f1f1;
+        }
+        .button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript">
+        function convertJson(){
+                var search_text = document.getElementById('search_text').value
+                var testString=  {"search_text":search_text}
+                return JSON.stringify(testString)
+            }
+        function jqsub() {
+            var $f = $('#contactForm1');
+            var datajson = convertJson()
+            var resultdiv = document.getElementById("result_message");
+            $.ajax({
+            type: 'POST',
+            url: "/predict_news_category",
+            data: datajson,
+                success: function(msg) {
+                    console.log(msg);
+                var formResponse = eval(msg); // This line evaluates the JSON data and converts it to JSON object. In older version of jQuery you will have to evaluate JSON object as a string.
+                resultdiv.innerText  =msg['category']
+                resultdiv.style.display = "block"
+                },
+                error: function() {
+                    alert('error'+msg.message)
+                    return false;
+                }
+
+            });
+            }
+    </script>
+</head>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 text-center bg-primary" style="height:40px;"><b>News Categorization Application</b></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 bg-success" style="height:1400px;"><b>About Application</b></div>
+            <div class="col-xs-9 bg-info" style="height:1400px;">
+                <p></p>
+                <form id="contactForm1" action="#">
+                    <label >Search Text</label>
+                    <input type="text" id="search_text" name="search_text">
+                    <input type="button" class="button" value="Submit" onclick="jqsub(this);">
+                    <p></p>
+                    <label>Result :</label>
+                    <div style="display:none" id="result_message"></div>
+
+                </form>
+            </div>
+
+    </div>
+</body>
+</html>

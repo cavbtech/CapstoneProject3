@@ -1,0 +1,55 @@
+docker build --tag producer .
+
+docker build --tag consumer .
+
+docker build --tag spark-client .
+
+docker run -it -p 8088:8088 ^
+  -p 8042:8042 ^
+  -p 4041:4040 ^
+  -v c://Users/srinivasa/PycharmProjects/CapstoneProject2/sparkclient/dockervolume:/myvol ^
+  --net capstoneproject2_net_pet ^
+  --name driver ^
+  -h driver ^
+  spark-client:latest
+  
+spark-submit /myvol/SimplePySpark.py
+  
+docker run -it ^
+  --net capstoneproject2_net_pet ^
+  --name producer_container ^
+  -h producer_container ^
+  producer:latest
+
+docker run -it ^
+  -p 8088:8088 ^
+  -p 8042:8042 ^
+  -p 4041:4040 ^
+  --net capstoneproject2_net_pet ^
+  --name driver ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject2/datavol:/app/datavol ^
+  -h driver ^
+  consumer:latest
+  
+docker rm -f driver
+
+docker image -f consumer
+
+docker build --tag webapp .
+docker run -it ^
+  -p 11030:11030 ^
+  --ip 172.27.1.19 ^
+  --net capstoneproject2_net_pet ^
+  --name webapp ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject2/datavol:/app/datavol ^
+  --hostname capstone2 ^
+  webapp:latest
+  
+  
+docker build --tag webapp .
+docker run -it ^
+  -p 11030:8088 ^
+  --name webapp ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject2/datavol:/app/datavol ^
+  --hostname capstone2 ^
+  webapp:latest

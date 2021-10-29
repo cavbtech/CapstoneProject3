@@ -1,0 +1,11 @@
+##Textblob is an open-source python library for processing textual data.
+fastapi==0.63.0
+uvicorn==0.13.3
+pytest==6.2.4
+requests==2.25.1
+scikit-learn==0.24.2
+Imbalanced-Learn==0.8.0
+imblearn==0.0
+aiofiles==0.7.0
+nltk
+textblob

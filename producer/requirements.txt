@@ -1,0 +1,4 @@
+kafka-python
+feedparser
+pymongo
+python-dateutil

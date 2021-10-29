@@ -1,0 +1,8 @@
+##Textblob is an open-source python library for processing textual data.
+textblob
+nltk==3.6.5
+##Speed up your Pandas Processing with Swifter
+#swifter
+pyspark-stubs==2.3.0
+pandas==1.2.4
+sklearn
