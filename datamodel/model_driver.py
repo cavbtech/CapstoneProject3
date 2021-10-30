@@ -49,5 +49,5 @@ schedule.every().day.at("01:30").do(complete_workflow)
 while True:
     ## If it is pending then wait for 5 mins and then restart
     schedule.run_pending()
-    time.sleep(60*5)
+    time.sleep(60*10)
 
