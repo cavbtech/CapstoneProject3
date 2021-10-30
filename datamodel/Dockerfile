@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DISPLAY=:99
 
 # Install apt dependencies
-RUN apt update && apt upgrade
+RUN apt update
 
 RUN apt install tar
 

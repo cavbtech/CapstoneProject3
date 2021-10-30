@@ -9,3 +9,4 @@ imblearn==0.0
 aiofiles==0.7.0
 nltk
 textblob
+schedule

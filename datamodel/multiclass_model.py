@@ -2,7 +2,7 @@
 import glob
 import re
 import string
-
+from sklearn.svm import LinearSVC
 import nltk
 import pandas as pd
 import pickle
@@ -98,9 +98,12 @@ def trainModel(df_news):
     x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
     v = dict(zip(list(y), df_news['category'].to_list()))
 
+    # text_clf = Pipeline(
+    #     [('vect', CountVectorizer(analyzer="word", stop_words="english")), ('tfidf', TfidfTransformer(use_idf=True)),
+    #      ('clf', MultinomialNB(alpha=.01))])
     text_clf = Pipeline(
         [('vect', CountVectorizer(analyzer="word", stop_words="english")), ('tfidf', TfidfTransformer(use_idf=True)),
-         ('clf', MultinomialNB(alpha=.01))])
+         ('clf', LinearSVC())])
 
     text_clf.fit(x_train['text'].to_list(), list(y_train))
     return (text_clf,v)

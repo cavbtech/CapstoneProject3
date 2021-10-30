@@ -7,8 +7,8 @@ docker build --tag spark-client .
 docker run -it -p 8088:8088 ^
   -p 8042:8042 ^
   -p 4041:4040 ^
-  -v c://Users/srinivasa/PycharmProjects/CapstoneProject2/sparkclient/dockervolume:/myvol ^
-  --net capstoneproject2_net_pet ^
+  -v c://Users/srinivasa/PycharmProjects/CapstoneProject3/sparkclient/dockervolume:/myvol ^
+  --net CapstoneProject3_net_pet ^
   --name driver ^
   -h driver ^
   spark-client:latest
@@ -16,7 +16,7 @@ docker run -it -p 8088:8088 ^
 spark-submit /myvol/SimplePySpark.py
   
 docker run -it ^
-  --net capstoneproject2_net_pet ^
+  --net CapstoneProject3_net_pet ^
   --name producer_container ^
   -h producer_container ^
   producer:latest
@@ -25,9 +25,9 @@ docker run -it ^
   -p 8088:8088 ^
   -p 8042:8042 ^
   -p 4041:4040 ^
-  --net capstoneproject2_net_pet ^
+  --net CapstoneProject3_net_pet ^
   --name driver ^
-  -v C://Users/srinivasa/PycharmProjects/CapstoneProject2/datavol:/app/datavol ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject3/datavol:/app/datavol ^
   -h driver ^
   consumer:latest
   
@@ -39,9 +39,9 @@ docker build --tag webapp .
 docker run -it ^
   -p 11030:11030 ^
   --ip 172.27.1.19 ^
-  --net capstoneproject2_net_pet ^
+  --net CapstoneProject3_net_pet ^
   --name webapp ^
-  -v C://Users/srinivasa/PycharmProjects/CapstoneProject2/datavol:/app/datavol ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject3/datavol:/app/datavol ^
   --hostname capstone2 ^
   webapp:latest
   
@@ -50,6 +50,17 @@ docker build --tag webapp .
 docker run -it ^
   -p 11030:8088 ^
   --name webapp ^
-  -v C://Users/srinivasa/PycharmProjects/CapstoneProject2/datavol:/app/datavol ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject3/datavol:/app/datavol ^
   --hostname capstone2 ^
   webapp:latest
+
+#  --net CapstoneProject3_net_pet ^
+docker build --tag dockermodel .
+docker run -it ^
+  -p 8089:8088 ^
+  -p 8043:8042 ^
+  -p 4042:4040 ^
+  --name dockermodel-container ^
+  -v C://Users/srinivasa/PycharmProjects/CapstoneProject3/datavol:/app/datavol ^
+  -h driver ^
+  dockermodel:latest
