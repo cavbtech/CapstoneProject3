@@ -10,8 +10,10 @@ gen
 venv
 consumer/devjars/checkpoint
 datavol/raw/newfeeds/checkpoint
-datavol/raw/newfeeds/cleansed
-datavol/cleansed
-consumer/devjars/newfeeds
-datavol/raw/newsfeeds
+datavol/raw/newsfeeds/checkpoint
+datavol/raw/checkpoint
+datavol/raw/newsfeeds/_spark_metadata
+datavol/raw/newsfeeds/
+
+*.crc
 
